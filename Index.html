@@ -1,1 +1,140 @@
 
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>For Kemo - The Royal Book ❤️</title>
+<link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@700&family=Playfair+Display:ital,wght@1,600&display=swap" rel="stylesheet">
+<style>
+    :root { --accent: #ff4d6d; --gold: #ffd700; }
+    body { margin: 0; background: black; color: white; overflow: hidden; font-family: 'Dancing Script', cursive; display: flex; justify-content: center; align-items: center; height: 100vh; }
+
+    /* نجوم الخلفية */
+    .star { position: absolute; background: white; border-radius: 50%; opacity: 0.5; animation: twinkle var(--d) infinite; }
+    @keyframes twinkle { 0%, 100% { opacity: 0.3; transform: scale(1); } 50% { opacity: 1; transform: scale(1.2); } }
+
+    /* العد التنازلي */
+    #countdown-wrap { position: fixed; inset: 0; display: flex; justify-content: center; align-items: center; background: black; z-index: 5000; font-size: 100px; color: var(--accent); }
+
+    /* الكتاب الحقيقي */
+    .book { position: relative; width: 300px; height: 400px; perspective: 1500px; z-index: 10; display: none; }
+    .page { 
+        position: absolute; width: 100%; height: 100%; background: #fffafb; color: #333; 
+        transform-origin: left; transition: transform 1.2s cubic-bezier(0.645, 0.045, 0.355, 1);
+        cursor: pointer; border-radius: 0 10px 10px 0; display: flex; flex-direction: column; 
+        justify-content: center; align-items: center; padding: 20px; box-sizing: border-box;
+        box-shadow: 5px 5px 20px rgba(0,0,0,0.5);
+    }
+    .page img { width: 100%; height: 80%; object-fit: cover; border-radius: 5px; }
+    .page.flip { transform: rotateY(-180deg); }
+
+    /* القلب النهائي والمفاجأة */
+    #final-stage { 
+        position: fixed; inset: 0; background: black; z-index: 3000; display: none; 
+        flex-direction: column; justify-content: center; align-items: center;
+    }
+    .big-heart { font-size: 180px; color: var(--accent); animation: pulse 0.8s infinite alternate; filter: drop-shadow(0 0 30px var(--accent)); }
+    @keyframes pulse { to { transform: scale(1.1); } }
+
+    .photo-circle { position: absolute; width: 80px; height: 80px; border-radius: 50%; border: 2px solid var(--accent); object-fit: cover; opacity: 0; transition: 1s; }
+
+    .closing-quote { margin-top: 30px; font-family: 'Playfair Display', serif; font-size: 22px; color: var(--gold); text-align: center; line-height: 1.4; }
+    
+    .final-btn { margin-top: 20px; padding: 12px 25px; background: var(--accent); color: white; border: none; border-radius: 25px; cursor: pointer; font-size: 18px; box-shadow: 0 5px 15px rgba(255, 77, 109, 0.4); }
+
+    /* شاشة الصورة النهائية */
+    #our-photo-screen { position: fixed; inset: 0; background: black; z-index: 6000; display: none; flex-direction: column; justify-content: center; align-items: center; animation: fadeIn 1s; }
+    #our-photo-screen img { max-width: 85%; border: 5px solid white; border-radius: 10px; }
+    @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+</style>
+</head>
+<body>
+
+    <div id="countdown-wrap">3</div>
+
+    <div class="book" id="book">
+        <div class="page" onclick="turnPage(this, true)"><h3>Click for Final Surprise ❤️</h3><p>Open for the Heart</p></div>
+        <div class="page" onclick="turnPage(this)"><img src="https://picsum.photos/400/600?4"><h3>My Sweet Kemo</h3></div>
+        <div class="page" onclick="turnPage(this)"><img src="https://picsum.photos/400/600?3"><h3>Every Moment Counts</h3></div>
+        <div class="page" onclick="turnPage(this)"><img src="https://picsum.photos/400/600?2"><h3>Happy Birthday</h3></div>
+        <div class="page" onclick="turnPage(this)"><h1>For Kemo ❤️</h1><div style="font-size: 60px;">💝</div><p>Tap to Open Story</p></div>
+    </div>
+
+    <div id="final-stage">
+        <div class="big-heart">❤️</div>
+        <div class="closing-quote">
+            "You are my today and all of my tomorrows." <br>
+            <span style="font-size: 30px; color: var(--accent);">Happy Birthday, Kemo!</span>
+        </div>
+        <button class="final-btn" onclick="showBigPhoto()">TAP FOR OUR SPECIAL SURPRISE 💖</button>
+    </div>
+
+    <div id="our-photo-screen">
+        <img src="YOUR_PHOTO_LINK" alt="Kemo & Me" onerror="this.src='https://picsum.photos/1080/1920?loves'">
+        <h2 style="color:var(--gold); margin-top:20px;">Forever Together, Kemo ❤️</h2>
+        <button onclick="document.getElementById('our-photo-screen').style.display='none'" style="background:none; border:1px solid white; color:white; margin-top:10px; padding:5px 15px; border-radius:15px; cursor:pointer;">Close</button>
+    </div>
+
+    <audio id="bgMusic" loop>
+        <source src="https://cdn.pixabay.com/audio/2022/11/22/audio_feb643c162.mp3" type="audio/mpeg">
+    </audio>
+
+    <script>
+        // النجوم
+        for (let i = 0; i < 150; i++) {
+            let s = document.createElement('div'); s.className = 'star';
+            s.style.width = s.style.height = Math.random()*3+'px';
+            s.style.top = Math.random()*100+'vh'; s.style.left = Math.random()*100+'vw';
+            s.style.setProperty('--d', Math.random()*3+2+'s'); document.body.appendChild(s);
+        }
+
+        let c = 3;
+        const timer = setInterval(() => {
+            c--;
+            if (c > 0) document.getElementById('countdown-wrap').innerText = c;
+            else {
+                clearInterval(timer);
+                document.getElementById('countdown-wrap').style.display = 'none';
+                document.getElementById('book').style.display = 'block';
+                document.getElementById('bgMusic').play();
+            }
+        }, 1000);
+
+        let flippedCount = 0;
+        function turnPage(page, isLast = false) {
+            page.classList.add('flip');
+            flippedCount++;
+            if(isLast) {
+                setTimeout(() => {
+                    document.getElementById('book').style.display = 'none';
+                    document.getElementById('final-stage').style.display = 'flex';
+                    explodePhotos();
+                }, 1000);
+            }
+        }
+
+        function explodePhotos() {
+            const stage = document.getElementById('final-stage');
+            const total = 14; 
+            for (let i = 0; i < total; i++) {
+                const img = document.createElement('img');
+                img.src = `https://picsum.photos/200/200?sig=${i+50}`;
+                img.className = 'photo-circle';
+                const angle = (i / total) * Math.PI * 2;
+                const x = 320 * Math.pow(Math.sin(angle), 3); 
+                const y = -220 * (Math.cos(angle) - (5/13)*Math.cos(2*angle) - (2/13)*Math.cos(3*angle) - (1/13)*Math.cos(4*angle));
+                img.style.left = `calc(50% + ${x}px - 40px)`;
+                img.style.top = `calc(35% + ${y}px - 40px)`;
+                stage.appendChild(img);
+                setTimeout(() => img.style.opacity = '1', i * 150);
+            }
+        }
+
+        function showBigPhoto() {
+            document.getElementById('our-photo-screen').style.display = 'flex';
+        }
+    </script>
+</body>
+</html>
+
